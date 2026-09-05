@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>政府採購考照題庫練習</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700;900&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#152238;
+    --ink-soft:#3c4a63;
+    --paper:#F1EFE8;
+    --panel:#FFFFFF;
+    --line:#D8D3C4;
+    --line-strong:#B9B29B;
+    --brand:#1F3A5F;
+    --brand-deep:#122540;
+    --gold:#A9822C;
+    --teal:#2E6B5E;
+    --teal-bg:#E4EEEA;
+    --rust:#A8431F;
+    --rust-bg:#F5E4DC;
+    --shadow: 0 1px 0 rgba(21,34,56,0.06);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Noto Sans TC", sans-serif;
+    line-height:1.6;
+    min-height:100vh;
+  }
+  ::selection{ background: #cfe0da; }
+
+  h1,h2,h3,h4{
+    font-family:"Noto Serif TC", serif;
+    color:var(--brand-deep);
+    margin:0 0 .4em 0;
+    letter-spacing:.02em;
+  }
+
+  a{color:var(--brand);}
+
+  .app-shell{
+    max-width:1080px;
+    margin:0 auto;
+    padding:28px 20px 80px;
+  }
+
+  /* ---------- Header / masthead ---------- */
+  .masthead{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    border-bottom:3px double var(--line-strong);
+    padding-bottom:14px;
+    margin-bottom:28px;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .masthead .title-block{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;}
+  .masthead .seal{
+    width:46px;height:46px;border-radius:50%;
+    border:2px solid var(--rust);
+    color:var(--rust);
+    display:flex;align-items:center;justify-content:center;
+    font-family:"Noto Serif TC",serif;
+    font-weight:900;font-size:13px;
+    flex:none;
+    transform: rotate(-8deg);
+    letter-spacing:0;
+  }
+  .masthead h1{font-size:26px; margin:0;}
+  .masthead .subtitle{color:var(--ink-soft); font-size:13px;}
+  .masthead .date-tag{
+    font-size:12px;color:var(--ink-soft);
+    border:1px solid var(--line-strong);
+    padding:4px 10px;
+    white-space:nowrap;
+  }
+
+  /* ---------- Stat strip ---------- */
+  .stat-strip{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    border:1px solid var(--line-strong);
+    background:var(--panel);
+    margin-bottom:26px;
+  }
+  .stat-strip .stat{
+    padding:16px 18px;
+    border-right:1px solid var(--line);
+  }
+  .stat-strip .stat:last-child{border-right:none;}
+  .stat .stat-label{font-size:12px;color:var(--ink-soft);}
+  .stat .stat-value{font-family:"Noto Serif TC",serif; font-size:26px; color:var(--brand-deep); font-weight:700; margin-top:2px;}
+  .stat .stat-sub{font-size:11px;color:var(--ink-soft); margin-top:2px;}
+  .progress-bar-track{
+    height:5px; background:var(--line); margin-top:8px; overflow:hidden;
+  }
+  .progress-bar-fill{ height:100%; background:var(--teal); }
+  @media (max-width:680px){
+    .stat-strip{grid-template-columns:repeat(2,1fr);}
+    .stat-strip .stat:nth-child(2){border-right:none;}
+  }
+
+  /* ---------- Action cards ---------- */
+  .action-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-bottom:32px;
+  }
+  @media (max-width:760px){ .action-grid{grid-template-columns:1fr;} }
+  .action-card{
+    background:var(--panel);
+    border:1px solid var(--line-strong);
+    padding:20px 20px 18px;
+    cursor:pointer;
+    position:relative;
+    transition:transform .12s ease, box-shadow .12s ease;
+    text-align:left;
+  }
+  .action-card:hover{ transform:translateY(-2px); box-shadow:0 6px 14px rgba(21,34,56,0.10); }
+  .action-card .idx{
+    font-family:"Noto Serif TC",serif;
+    font-size:11px; color:var(--gold); letter-spacing:.12em;
+  }
+  .action-card h3{font-size:19px; margin:6px 0 6px;}
+  .action-card p{font-size:13px;color:var(--ink-soft); margin:0;}
+  .action-card .badge{
+    position:absolute; top:16px; right:16px;
+    font-size:11px; background:var(--rust-bg); color:var(--rust);
+    padding:2px 8px; border:1px solid var(--rust);
+  }
+
+  /* ---------- Section panels ---------- */
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line-strong);
+    padding:22px 24px;
+    margin-bottom:20px;
+  }
+  .panel-title-row{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:14px; flex-wrap:wrap; gap:8px;
+  }
+  .panel-title-row h2{font-size:20px;margin:0;}
+  .back-link{
+    font-size:13px; color:var(--ink-soft); cursor:pointer; user-select:none;
+    border:1px solid var(--line-strong); padding:5px 12px;
+    background:var(--panel);
+  }
+  .back-link:hover{border-color:var(--brand); color:var(--brand);}
+
+  /* ---------- Chapter table (home) ---------- */
+  table.chapter-table{width:100%; border-collapse:collapse; font-size:13.5px;}
+  table.chapter-table th, table.chapter-table td{
+    text-align:left; padding:8px 10px; border-bottom:1px solid var(--line);
+  }
+  table.chapter-table th{color:var(--ink-soft); font-weight:600; font-size:12px;}
+  table.chapter-table td.num{text-align:right; font-variant-numeric:tabular-nums;}
+  table.chapter-table tr:hover td{background:#FAF8F2;}
+
+  /* ---------- Form controls ---------- */
+  .field-label{font-size:13px; font-weight:600; color:var(--brand-deep); margin-bottom:8px; display:block;}
+  .chip-row{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px;}
+  .chip{
+    border:1px solid var(--line-strong); background:var(--panel);
+    padding:7px 16px; font-size:13.5px; cursor:pointer; color:var(--ink);
+  }
+  .chip.active{ background:var(--brand); border-color:var(--brand); color:#fff; }
+  .num-input{
+    width:80px; padding:7px 10px; border:1px solid var(--line-strong);
+    font-size:14px; font-family:inherit; background:var(--panel); color:var(--ink);
+  }
+  .chapter-grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:6px 18px;
+    margin-bottom:8px;
+  }
+  @media (max-width:600px){ .chapter-grid{grid-template-columns:1fr;} }
+  .chapter-check{
+    display:flex; align-items:center; gap:8px; font-size:13.5px;
+    padding:5px 4px; cursor:pointer;
+  }
+  .chapter-check input{ accent-color:var(--brand); width:15px;height:15px; }
+  .chapter-check .cnt{ margin-left:auto; color:var(--ink-soft); font-size:12px; font-variant-numeric:tabular-nums; }
+  .select-all-row{display:flex; gap:10px; margin-bottom:10px;}
+  .text-btn{
+    font-size:12.5px; color:var(--brand); cursor:pointer; text-decoration:underline; background:none; border:none; padding:0; font-family:inherit;
+  }
+  .pool-readout{
+    margin:16px 0 22px; padding:12px 16px; background:var(--teal-bg); border:1px solid var(--teal);
+    font-size:14px; color:var(--teal);
+  }
+  .pool-readout.zero{ background:var(--rust-bg); border-color:var(--rust); color:var(--rust); }
+
+  .btn{
+    font-family:inherit; font-size:14.5px; font-weight:600;
+    padding:11px 26px; border:1px solid var(--brand); background:var(--brand);
+    color:#fff; cursor:pointer; letter-spacing:.02em;
+  }
+  .btn:hover{ background:var(--brand-deep); }
+  .btn:disabled{ background:#B9B29B; border-color:#B9B29B; cursor:not-allowed; }
+  .btn.secondary{ background:var(--panel); color:var(--brand); }
+  .btn.secondary:hover{ background:#EFEAE0; }
+  .btn.ghost{ background:transparent; color:var(--ink-soft); border-color:var(--line-strong); }
+  .btn.ghost:hover{ border-color:var(--rust); color:var(--rust); }
+  .btn-row{display:flex; gap:12px; flex-wrap:wrap; margin-top:6px;}
+
+  /* ---------- Quiz view ---------- */
+  .quiz-topbar{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:16px; flex-wrap:wrap; gap:10px;
+  }
+  .quiz-progress{font-size:13px; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
+  .quiz-score{font-size:13px; color:var(--teal); font-weight:600;}
+  .mini-track{height:4px; background:var(--line); margin-bottom:22px;}
+  .mini-fill{height:100%; background:var(--gold);}
+
+  .tag-row{display:flex; gap:8px; margin-bottom:14px;}
+  .tag{
+    font-size:11.5px; padding:3px 10px; border:1px solid var(--line-strong); color:var(--ink-soft);
+  }
+  .tag.chapter{color:var(--brand); border-color:var(--brand);}
+  .tag.qtype{color:var(--gold); border-color:var(--gold);}
+
+  .stem{
+    font-size:18px; line-height:1.75; margin-bottom:22px; color:var(--ink);
+    font-weight:500;
+  }
+  .stem .qno{color:var(--brand); font-family:"Noto Serif TC",serif; font-weight:700;}
+
+  .option-list{ display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+  .option{
+    display:flex; gap:12px; align-items:flex-start;
+    border:1px solid var(--line-strong); background:var(--panel);
+    padding:13px 16px; cursor:pointer; font-size:15px; text-align:left;
+    transition:background .1s;
+  }
+  .option:hover{ background:#FAF8F2; }
+  .option .opt-key{
+    font-family:"Noto Serif TC",serif; font-weight:700; color:var(--brand);
+    flex:none; width:22px;
+  }
+  .option.selected{ border-color:var(--brand); background:#EEF2F6; }
+  .option.correct{ border-color:var(--teal); background:var(--teal-bg); }
+  .option.correct .opt-key{ color:var(--teal); }
+  .option.wrong{ border-color:var(--rust); background:var(--rust-bg); }
+  .option.wrong .opt-key{ color:var(--rust); }
+  .option.disabled{ cursor:default; }
+  .option.disabled:hover{ background:inherit; }
+
+  .tf-row{ display:flex; gap:14px; margin-bottom:20px; }
+  .tf-btn{
+    flex:1; padding:20px; border:1px solid var(--line-strong); background:var(--panel);
+    font-size:17px; font-weight:600; cursor:pointer; text-align:center;
+  }
+  .tf-btn:hover{ background:#FAF8F2; }
+  .tf-btn.correct{ border-color:var(--teal); background:var(--teal-bg); color:var(--teal); }
+  .tf-btn.wrong{ border-color:var(--rust); background:var(--rust-bg); color:var(--rust); }
+  .tf-btn.disabled{ cursor:default; }
+
+  .feedback-banner{
+    padding:12px 16px; margin-bottom:16px; font-size:14px; font-weight:600;
+    border:1px solid var(--teal); background:var(--teal-bg); color:var(--teal);
+  }
+  .feedback-banner.wrong{ border-color:var(--rust); background:var(--rust-bg); color:var(--rust); }
+
+  /* mock palette */
+  .palette{
+    display:flex; flex-wrap:wrap; gap:6px; margin-bottom:18px;
+    max-height:150px; overflow-y:auto; padding:4px 2px;
+  }
+  .palette-btn{
+    width:34px; height:30px; font-size:12px; border:1px solid var(--line-strong);
+    background:var(--panel); cursor:pointer; color:var(--ink-soft); font-variant-numeric:tabular-nums;
+  }
+  .palette-btn.answered{ background:var(--brand); border-color:var(--brand); color:#fff; }
+  .palette-btn.current{ outline:2px solid var(--gold); outline-offset:1px; }
+
+  /* result view */
+  .score-hero{
+    display:flex; align-items:center; gap:26px; margin-bottom:24px; flex-wrap:wrap;
+  }
+  .score-circle{
+    width:120px; height:120px; border-radius:50%;
+    border:6px solid var(--teal);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    flex:none; background:var(--teal-bg);
+  }
+  .score-circle.low{ border-color:var(--rust); background:var(--rust-bg); }
+  .score-circle .pct{ font-family:"Noto Serif TC",serif; font-size:30px; font-weight:700; color:var(--brand-deep); }
+  .score-circle .lbl{ font-size:11px; color:var(--ink-soft); }
+  .score-detail p{ margin:2px 0; font-size:14.5px; }
+  .score-detail .num{ font-weight:700; color:var(--brand-deep); }
+
+  .review-item{
+    border:1px solid var(--line-strong); border-left:4px solid var(--rust);
+    background:var(--panel); padding:14px 18px; margin-bottom:12px;
+  }
+  .review-item .rq-meta{ font-size:11.5px; color:var(--ink-soft); margin-bottom:6px; }
+  .review-item .rq-stem{ font-size:15px; margin-bottom:8px; }
+  .review-item .rq-answer{ font-size:13.5px; }
+  .review-item .rq-answer .ok{ color:var(--teal); font-weight:600; }
+  .review-item .rq-answer .bad{ color:var(--rust); font-weight:600; text-decoration:line-through; }
+  .review-item .rq-opts{ font-size:13px; color:var(--ink-soft); margin-top:4px; }
+
+  .empty-note{
+    text-align:center; color:var(--ink-soft); padding:40px 10px; font-size:14px;
+  }
+
+  .chapter-wrong-row{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:10px 4px; border-bottom:1px solid var(--line); font-size:14px;
+    flex-wrap:wrap; gap:8px;
+  }
+  .chapter-wrong-row .cw-name{ font-weight:600; color:var(--brand-deep); }
+  .chapter-wrong-row .cw-count{ color:var(--rust); font-size:13px; margin-left:8px; }
+  .chapter-wrong-row .cw-actions{ display:flex; gap:8px; }
+  .small-btn{
+    font-size:12.5px; padding:5px 12px; border:1px solid var(--brand); background:none; color:var(--brand); cursor:pointer;
+  }
+  .small-btn:hover{ background:var(--brand); color:#fff; }
+
+  footer.hint{
+    text-align:center; font-size:12px; color:var(--ink-soft); margin-top:30px;
+  }
+  .kbd-hint{ font-size:12px; color:var(--ink-soft); margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="app-shell" id="app"></div>
+
+<script src="data.js"></script>
+<script>
+/* ============================================================
+   政府採購考照題庫練習網站
+   ============================================================ */
+
+const CHAPTER_ORDER = [
+  "工程及技術服務採購作業","財物及勞務採購作業","最有利標及評選優勝廠商",
+  "電子採購實務","錯誤採購態樣","投標須知及招標文件製作","採購契約",
+  "底價及價格分析","政府採購法之爭議處理","道德規範及違法處置",
+  "政府採購全生命週期概論","政府採購法之總則、招標及決標",
+  "政府採購法之履約管理及驗收","政府採購法之罰則及附則"
+];
+
+const TOTAL_QUESTIONS = QUESTIONS.length;
+const QMAP = {};
+QUESTIONS.forEach(q => QMAP[q.id] = q);
+
+/* ---------- Persistence ---------- */
+const STORAGE_KEY = "procurementExamProgress_v1";
+function loadProgress(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return { practiced: [], wrong: [] };
+    const parsed = JSON.parse(raw);
+    return {
+      practiced: Array.isArray(parsed.practiced) ? parsed.practiced : [],
+      wrong: Array.isArray(parsed.wrong) ? parsed.wrong : []
+    };
+  }catch(e){ return { practiced: [], wrong: [] }; }
+}
+let progress = loadProgress();
+let practicedSet = new Set(progress.practiced);
+let wrongSet = new Set(progress.wrong);
+
+function saveProgress(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    practiced: Array.from(practicedSet),
+    wrong: Array.from(wrongSet)
+  }));
+}
+function markPracticed(id){ practicedSet.add(id); }
+function markWrong(id){ wrongSet.add(id); }
+function markCorrectedIfNeeded(id){ wrongSet.delete(id); }
+
+/* ---------- Utility ---------- */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+function chapterCounts(){
+  const counts = {};
+  CHAPTER_ORDER.forEach(c => counts[c] = 0);
+  QUESTIONS.forEach(q => counts[q.chapter]++);
+  return counts;
+}
+function practicedCountForChapter(ch){
+  let n = 0;
+  QUESTIONS.forEach(q => { if(q.chapter===ch && practicedSet.has(q.id)) n++; });
+  return n;
+}
+
+/* ============================================================
+   Router / render
+   ============================================================ */
+const app = document.getElementById("app");
+let state = { view: "home" };
+
+function go(view, params){
+  state = Object.assign({ view }, params||{});
+  render();
+  window.scrollTo({top:0, behavior:"instant"});
+}
+
+function render(){
+  if(state.view === "home") return renderHome();
+  if(state.view === "practice-setup") return renderSetup("practice");
+  if(state.view === "mock-setup") return renderSetup("mock");
+  if(state.view === "quiz") return renderQuiz();
+  if(state.view === "result") return renderResult();
+  if(state.view === "review-home") return renderReviewHome();
+  app.innerHTML = "<p>找不到頁面</p>";
+}
+
+/* ---------- Header (shared) ---------- */
+function masthead(){
+  return `
+  <div class="masthead">
+    <div class="title-block">
+      <div class="seal">採購<br>考照</div>
+      <div>
+        <h1>政府採購考照題庫練習</h1>
+        <div class="subtitle">依 115/09/04 題庫建置・共 ${TOTAL_QUESTIONS} 題</div>
+      </div>
+    </div>
+    <div class="date-tag">資料產生日期：115/09/04</div>
+  </div>`;
+}
+
+/* ============================================================
+   HOME
+   ============================================================ */
+function renderHome(){
+  const counts = chapterCounts();
+  const practicedTotal = practicedSet.size;
+  const wrongTotal = wrongSet.size;
+  const pct = TOTAL_QUESTIONS ? Math.round(practicedTotal/TOTAL_QUESTIONS*100) : 0;
+
+  const rows = CHAPTER_ORDER.map(ch=>{
+    const total = counts[ch];
+    const done = practicedCountForChapter(ch);
+    return `<tr>
+      <td>${escapeHtml(ch)}</td>
+      <td class="num">${total}</td>
+      <td class="num">${done}</td>
+      <td class="num">${total ? Math.round(done/total*100) : 0}%</td>
+    </tr>`;
+  }).join("");
+
+  app.innerHTML = `
+    ${masthead()}
+    <div class="stat-strip">
+      <div class="stat">
+        <div class="stat-label">總題數</div>
+        <div class="stat-value">${TOTAL_QUESTIONS}</div>
+        <div class="stat-sub">題庫全部題目</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">已練習題數</div>
+        <div class="stat-value">${practicedTotal}</div>
+        <div class="progress-bar-track"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+        <div class="stat-sub">${pct}% 完成</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">尚未練習</div>
+        <div class="stat-value">${TOTAL_QUESTIONS - practicedTotal}</div>
+        <div class="stat-sub">題</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">錯題本</div>
+        <div class="stat-value" style="color:var(--rust)">${wrongTotal}</div>
+        <div class="stat-sub">待複習</div>
+      </div>
+    </div>
+
+    <div class="action-grid">
+      <div class="action-card" id="card-practice">
+        <div class="idx">01 · 章節練習</div>
+        <h3>開始練習</h3>
+        <p>自選章節與題數（10 / 20 題或自訂），作答立即顯示對錯，練習後可檢視錯題。</p>
+      </div>
+      <div class="action-card" id="card-mock">
+        <div class="idx">02 · 模擬考試</div>
+        <h3>模擬考</h3>
+        <p>20 題以上，作答期間不顯示對錯，須全部作答完畢才會告知成績與錯題內容。</p>
+      </div>
+      <div class="action-card" id="card-review">
+        <div class="idx">03 · 複習強化</div>
+        <h3>錯題複習區</h3>
+        ${wrongTotal>0 ? `<span class="badge">${wrongTotal} 題待複習</span>` : ""}
+        <p>集中複習曾經答錯的題目，答對後即從錯題本移除，逐步清空弱點。</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title-row">
+        <h2>各章節題數與練習進度</h2>
+      </div>
+      <table class="chapter-table">
+        <thead><tr><th>章節</th><th style="text-align:right">題數</th><th style="text-align:right">已練習</th><th style="text-align:right">進度</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn ghost" id="btn-reset">清除所有練習紀錄</button>
+    </div>
+    <footer class="hint">練習紀錄與錯題本會儲存在本機瀏覽器中，換裝置或清除瀏覽資料後將會重置。</footer>
+  `;
+
+  document.getElementById("card-practice").onclick = () => go("practice-setup");
+  document.getElementById("card-mock").onclick = () => go("mock-setup");
+  document.getElementById("card-review").onclick = () => go("review-home");
+  document.getElementById("btn-reset").onclick = () => {
+    if(confirm("確定要清除所有練習紀錄與錯題本嗎？此動作無法復原。")){
+      practicedSet = new Set(); wrongSet = new Set(); saveProgress(); render();
+    }
+  };
+}
+
+/* ============================================================
+   SETUP (shared by practice & mock)
+   ============================================================ */
+function renderSetup(mode){
+  const isMock = mode === "mock";
+  const counts = chapterCounts();
+  const chosenChapters = new Set(CHAPTER_ORDER); // default all
+  const chosenTypes = new Set(["選擇題","是非題"]);
+  let countValue = isMock ? 20 : 10;
+  let customMode = false;
+
+  function poolSize(){
+    return QUESTIONS.filter(q => chosenChapters.has(q.chapter) && chosenTypes.has(q.type)).length;
+  }
+
+  const chapterChecks = CHAPTER_ORDER.map((ch,i)=>`
+    <label class="chapter-check">
+      <input type="checkbox" data-chapter="${i}" checked>
+      <span>${escapeHtml(ch)}</span>
+      <span class="cnt">${counts[ch]} 題</span>
+    </label>
+  `).join("");
+
+  const countOptions = isMock ? [20,30,50] : [10,20];
+
+  app.innerHTML = `
+    ${masthead()}
+    <div class="panel">
+      <div class="panel-title-row">
+        <h2>${isMock ? "模擬考設定" : "練習設定"}</h2>
+        <span class="back-link" id="btn-back">← 返回首頁</span>
+      </div>
+
+      <span class="field-label">題型範圍</span>
+      <div class="chip-row" id="type-chips">
+        <div class="chip active" data-type="all">全部題型</div>
+        <div class="chip" data-type="選擇題">僅選擇題</div>
+        <div class="chip" data-type="是非題">僅是非題</div>
+      </div>
+
+      <span class="field-label">練習題數${isMock ? "（模擬考建議 20 題以上）" : ""}</span>
+      <div class="chip-row" id="count-chips">
+        ${countOptions.map(n=>`<div class="chip" data-count="${n}">${n} 題</div>`).join("")}
+        <div class="chip" data-count="custom">自訂</div>
+        <input type="number" id="custom-count" class="num-input" min="1" style="display:none" placeholder="題數">
+      </div>
+
+      <span class="field-label">選擇章節</span>
+      <div class="select-all-row">
+        <button class="text-btn" id="sel-all">全選</button>
+        <button class="text-btn" id="sel-none">全不選</button>
+      </div>
+      <div class="chapter-grid" id="chapter-grid">${chapterChecks}</div>
+
+      <div class="pool-readout" id="pool-readout"></div>
+
+      <div class="btn-row">
+        <button class="btn" id="btn-start">${isMock ? "開始模擬考" : "開始練習"}</button>
+        <button class="btn secondary" id="btn-cancel">取消</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("btn-back").onclick = () => go("home");
+  document.getElementById("btn-cancel").onclick = () => go("home");
+
+  // type chips
+  document.querySelectorAll("#type-chips .chip").forEach(chip=>{
+    chip.onclick = () => {
+      document.querySelectorAll("#type-chips .chip").forEach(c=>c.classList.remove("active"));
+      chip.classList.add("active");
+      const t = chip.dataset.type;
+      chosenTypes.clear();
+      if(t === "all"){ chosenTypes.add("選擇題"); chosenTypes.add("是非題"); }
+      else chosenTypes.add(t);
+      updateReadout();
+    };
+  });
+
+  // count chips
+  function selectCountChip(el){
+    document.querySelectorAll("#count-chips .chip").forEach(c=>c.classList.remove("active"));
+    el.classList.add("active");
+  }
+  const customInput = document.getElementById("custom-count");
+  document.querySelectorAll("#count-chips .chip").forEach(chip=>{
+    chip.onclick = () => {
+      selectCountChip(chip);
+      if(chip.dataset.count === "custom"){
+        customMode = true;
+        customInput.style.display = "inline-block";
+        customInput.focus();
+        countValue = parseInt(customInput.value)||0;
+      } else {
+        customMode = false;
+        customInput.style.display = "none";
+        countValue = parseInt(chip.dataset.count);
+      }
+      updateReadout();
+    };
+  });
+  customInput.oninput = () => { countValue = parseInt(customInput.value)||0; updateReadout(); };
+  // default select first count chip
+  const firstCountChip = document.querySelector("#count-chips .chip");
+  selectCountChip(firstCountChip);
+
+  // chapter checks
+  document.querySelectorAll("#chapter-grid input[type=checkbox]").forEach(cb=>{
+    cb.onchange = () => {
+      const ch = CHAPTER_ORDER[parseInt(cb.dataset.chapter)];
+      if(cb.checked) chosenChapters.add(ch); else chosenChapters.delete(ch);
+      updateReadout();
+    };
+  });
+  document.getElementById("sel-all").onclick = () => {
+    document.querySelectorAll("#chapter-grid input[type=checkbox]").forEach(cb=>{ cb.checked = true; chosenChapters.add(CHAPTER_ORDER[parseInt(cb.dataset.chapter)]); });
+    updateReadout();
+  };
+  document.getElementById("sel-none").onclick = () => {
+    document.querySelectorAll("#chapter-grid input[type=checkbox]").forEach(cb=>{ cb.checked = false; });
+    chosenChapters.clear();
+    updateReadout();
+  };
+
+  function updateReadout(){
+    const pool = poolSize();
+    const readout = document.getElementById("pool-readout");
+    const startBtn = document.getElementById("btn-start");
+    const effectiveCount = customMode ? countValue : countValue;
+    let msg = "";
+    if(pool === 0){
+      msg = "目前選擇的範圍內沒有題目，請至少選擇一個章節與題型。";
+      readout.classList.add("zero");
+      startBtn.disabled = true;
+    } else {
+      readout.classList.remove("zero");
+      const actual = Math.min(effectiveCount || 0, pool);
+      if(isMock && (effectiveCount||0) < 20){
+        msg = `此範圍共 ${pool} 題可供出題。模擬考建議至少 20 題，將以 ${Math.max(actual,1)} 題出題。`;
+      } else {
+        msg = `此範圍共 ${pool} 題可供出題，本次將抽取 ${actual || 0} 題。`;
+      }
+      startBtn.disabled = !(effectiveCount > 0);
+    }
+    readout.textContent = msg;
+  }
+  updateReadout();
+
+  document.getElementById("btn-start").onclick = () => {
+    const pool = QUESTIONS.filter(q => chosenChapters.has(q.chapter) && chosenTypes.has(q.type));
+    if(pool.length === 0) return;
+    const n = Math.min(countValue || 0, pool.length);
+    if(n <= 0) return;
+    const selected = shuffle(pool).slice(0, n);
+    startQuiz(selected, isMock ? "mock" : "practice");
+  };
+}
+
+/* ============================================================
+   QUIZ ENGINE
+   ============================================================ */
+let quizState = null;
+
+function startQuiz(questions, mode, opts){
+  quizState = {
+    mode, // "practice" | "mock" | "review"
+    questions,
+    idx: 0,
+    answers: new Array(questions.length).fill(null), // for mock: store chosen; for practice: store {chosen, correct}
+    score: 0,
+    finished: false,
+    returnView: (opts && opts.returnView) || "home"
+  };
+  go("quiz");
+}
+
+function currentQ(){ return quizState.questions[quizState.idx]; }
+
+function renderQuiz(){
+  const qs = quizState;
+  const q = currentQ();
+  const total = qs.questions.length;
+  const isMock = qs.mode === "mock";
+  const answered = qs.answers[qs.idx];
+
+  const progressPct = Math.round(((qs.idx)/total)*100);
+
+  let bodyHtml = "";
+
+  if(q.type === "選擇題"){
+    const opts = ["1","2","3","4"].map(k=>{
+      let cls = "option";
+      let show = "";
+      if(!isMock && answered){
+        cls += " disabled";
+        if(k === q.answer) cls += " correct";
+        else if(k === answered.chosen) cls += " wrong";
+      } else if(isMock && answered && answered.chosen === k){
+        cls += " selected";
+      }
+      return `<div class="${cls}" data-key="${k}">
+        <span class="opt-key">${k}</span>
+        <span>${escapeHtml(q.options[k]||"")}</span>
+      </div>`;
+    }).join("");
+    bodyHtml = `<div class="option-list" id="option-list">${opts}</div>`;
+  } else {
+    // 是非題
+    const mkBtn = (key,label) => {
+      let cls = "tf-btn";
+      if(!isMock && answered){
+        cls += " disabled";
+        if(key === q.answer) cls += " correct";
+        else if(key === answered.chosen) cls += " wrong";
+      } else if(isMock && answered && answered.chosen === key){
+        cls += " selected";
+      }
+      return `<div class="${cls}" data-key="${key}">${label}</div>`;
+    };
+    bodyHtml = `<div class="tf-row" id="tf-row">
+      ${mkBtn("O","○ 正確")}
+      ${mkBtn("X","✕ 錯誤")}
+    </div>`;
+  }
+
+  let feedbackHtml = "";
+  if(!isMock && answered){
+    const ok = answered.chosen === q.answer;
+    feedbackHtml = `<div class="feedback-banner ${ok?"":"wrong"}">
+      ${ok ? "✓ 答對了！" : `✗ 答錯了，正確答案是「${escapeHtml(q.type==="選擇題" ? (q.answer+" "+(q.options[q.answer]||"")) : (q.answer==="O"?"○ 正確":"✕ 錯誤"))}」`}
+    </div>`;
+  }
+
+  const nextLabel = qs.idx === total-1 ? (isMock ? "前往結果" : "查看結果") : "下一題";
+  const showNext = isMock ? true : !!answered;
+
+  // mock palette
+  let paletteHtml = "";
+  if(isMock){
+    const btns = qs.questions.map((_,i)=>{
+      let cls = "palette-btn";
+      if(qs.answers[i]) cls += " answered";
+      if(i === qs.idx) cls += " current";
+      return `<div class="${cls}" data-jump="${i}">${i+1}</div>`;
+    }).join("");
+    paletteHtml = `<div class="palette">${btns}</div>`;
+  }
+
+  const scoreHtml = !isMock ? `<span class="quiz-score">目前得分：${qs.score} / ${qs.answers.filter(a=>a!==null).length}</span>` : "";
+
+  app.innerHTML = `
+    ${masthead()}
+    <div class="panel">
+      <div class="quiz-topbar">
+        <span class="quiz-progress">${isMock ? "模擬考" : (qs.mode==="review"?"錯題複習":"章節練習")} · 第 ${qs.idx+1} / ${total} 題</span>
+        ${scoreHtml}
+        <span class="back-link" id="btn-quit">結束測驗</span>
+      </div>
+      <div class="mini-track"><div class="mini-fill" style="width:${progressPct}%"></div></div>
+
+      ${paletteHtml}
+
+      <div class="tag-row">
+        <span class="tag chapter">${escapeHtml(q.chapter)}</span>
+        <span class="tag qtype">${escapeHtml(q.type)}</span>
+      </div>
+
+      <div class="stem"><span class="qno">Q${qs.idx+1}.</span> ${escapeHtml(q.stem)}</div>
+
+      ${bodyHtml}
+      ${feedbackHtml}
+
+      <div class="btn-row">
+        ${isMock && qs.idx>0 ? `<button class="btn secondary" id="btn-prev">上一題</button>` : ""}
+        ${showNext ? `<button class="btn" id="btn-next">${nextLabel}</button>` : ""}
+        ${isMock ? `<button class="btn secondary" id="btn-submit">交卷</button>` : ""}
+      </div>
+    </div>
+  `;
+
+  document.getElementById("btn-quit").onclick = () => {
+    if(confirm("確定要結束本次測驗嗎？作答進度將不會列入成績。")) go(quizState.returnView === "home" ? "home" : quizState.returnView);
+  };
+
+  if(isMock){
+    document.querySelectorAll(".palette-btn").forEach(b=>{
+      b.onclick = () => { qs.idx = parseInt(b.dataset.jump); renderQuiz(); };
+    });
+    const prevBtn = document.getElementById("btn-prev");
+    if(prevBtn) prevBtn.onclick = () => { qs.idx--; renderQuiz(); };
+    document.getElementById("btn-submit").onclick = submitMock;
+  }
+
+  // answer handlers
+  function pickAnswer(key){
+    if(!isMock && qs.answers[qs.idx]) return; // already answered, locked
+    const wasAnswered = !!qs.answers[qs.idx];
+    qs.answers[qs.idx] = { chosen: key };
+    markPracticed(q.id);
+    if(!isMock){
+      const correct = key === q.answer;
+      qs.answers[qs.idx].correct = correct;
+      if(correct){ qs.score++; markCorrectedIfNeeded(q.id); }
+      else { markWrong(q.id); }
+      saveProgress();
+    } else {
+      saveProgress();
+    }
+    renderQuiz();
+  }
+
+  if(q.type === "選擇題"){
+    document.querySelectorAll("#option-list .option").forEach(el=>{
+      el.onclick = () => pickAnswer(el.dataset.key);
+    });
+  } else {
+    document.querySelectorAll("#tf-row .tf-btn").forEach(el=>{
+      el.onclick = () => pickAnswer(el.dataset.key);
+    });
+  }
+
+  const nextBtn = document.getElementById("btn-next");
+  if(nextBtn){
+    nextBtn.onclick = () => {
+      if(qs.idx === total-1){
+        if(isMock) submitMock(); else finishQuiz();
+      } else {
+        qs.idx++;
+        renderQuiz();
+      }
+    };
+  }
+}
+
+function submitMock(){
+  const qs = quizState;
+  const unanswered = qs.answers.filter(a=>a===null).length;
+  if(unanswered > 0){
+    alert(`尚有 ${unanswered} 題尚未作答，請完成所有題目後再交卷。`);
+    return;
+  }
+  // grade
+  qs.score = 0;
+  qs.questions.forEach((q,i)=>{
+    markPracticed(q.id);
+    const correct = qs.answers[i].chosen === q.answer;
+    qs.answers[i].correct = correct;
+    if(correct){ qs.score++; markCorrectedIfNeeded(q.id); }
+    else { markWrong(q.id); }
+  });
+  saveProgress();
+  qs.finished = true;
+  go("result");
+}
+
+function finishQuiz(){
+  quizState.finished = true;
+  go("result");
+}
+
+/* ============================================================
+   RESULT
+   ============================================================ */
+function renderResult(){
+  const qs = quizState;
+  const total = qs.questions.length;
+  const correctCount = qs.answers.filter(a=>a && a.correct).length;
+  const pct = total ? Math.round(correctCount/total*100) : 0;
+  const wrongList = qs.questions
+    .map((q,i)=>({q, a:qs.answers[i]}))
+    .filter(x => x.a && !x.a.correct);
+
+  const modeLabel = qs.mode === "mock" ? "模擬考" : (qs.mode === "review" ? "錯題複習" : "章節練習");
+
+  const reviewHtml = wrongList.length === 0
+    ? `<div class="empty-note">恭喜，本次沒有錯題！🎉</div>`
+    : wrongList.map(({q,a})=>{
+        let answerLine;
+        if(q.type === "選擇題"){
+          answerLine = `你的答案：<span class="bad">${a.chosen} ${escapeHtml(q.options[a.chosen]||"")}</span>　
+            正確答案：<span class="ok">${q.answer} ${escapeHtml(q.options[q.answer]||"")}</span>`;
+        } else {
+          const lbl = k => k==="O" ? "○ 正確" : "✕ 錯誤";
+          answerLine = `你的答案：<span class="bad">${lbl(a.chosen)}</span>　正確答案：<span class="ok">${lbl(q.answer)}</span>`;
+        }
+        return `<div class="review-item">
+          <div class="rq-meta">${escapeHtml(q.chapter)} · ${escapeHtml(q.type)}</div>
+          <div class="rq-stem">${escapeHtml(q.stem)}</div>
+          <div class="rq-answer">${answerLine}</div>
+        </div>`;
+      }).join("");
+
+  app.innerHTML = `
+    ${masthead()}
+    <div class="panel">
+      <div class="panel-title-row">
+        <h2>${modeLabel}結果</h2>
+        <span class="back-link" id="btn-home">返回首頁</span>
+      </div>
+
+      <div class="score-hero">
+        <div class="score-circle ${pct<60?'low':''}">
+          <div class="pct">${pct}%</div>
+          <div class="lbl">正確率</div>
+        </div>
+        <div class="score-detail">
+          <p>總題數：<span class="num">${total}</span> 題</p>
+          <p>答對：<span class="num" style="color:var(--teal)">${correctCount}</span> 題</p>
+          <p>答錯：<span class="num" style="color:var(--rust)">${wrongList.length}</span> 題</p>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn" id="btn-retry">重新測驗（同樣設定）</button>
+        ${wrongSet.size>0 ? `<button class="btn secondary" id="btn-goreview">前往錯題複習區</button>` : ""}
+        <button class="btn ghost" id="btn-home2">回首頁</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title-row"><h2>本次錯題內容複習</h2></div>
+      ${reviewHtml}
+    </div>
+  `;
+
+  document.getElementById("btn-home").onclick = () => go("home");
+  document.getElementById("btn-home2").onclick = () => go("home");
+  const goReview = document.getElementById("btn-goreview");
+  if(goReview) goReview.onclick = () => go("review-home");
+  document.getElementById("btn-retry").onclick = () => {
+    const reshuffled = shuffle(qs.questions.map(q=>q));
+    startQuiz(reshuffled, qs.mode);
+  };
+}
+
+/* ============================================================
+   REVIEW HOME (錯題複習區)
+   ============================================================ */
+function renderReviewHome(){
+  const wrongQs = QUESTIONS.filter(q => wrongSet.has(q.id));
+  const byChapter = {};
+  CHAPTER_ORDER.forEach(c => byChapter[c] = []);
+  wrongQs.forEach(q => { if(!byChapter[q.chapter]) byChapter[q.chapter]=[]; byChapter[q.chapter].push(q); });
+
+  const rows = CHAPTER_ORDER
+    .filter(ch => byChapter[ch].length > 0)
+    .map(ch => `
+      <div class="chapter-wrong-row">
+        <div><span class="cw-name">${escapeHtml(ch)}</span><span class="cw-count">${byChapter[ch].length} 題</span></div>
+        <div class="cw-actions">
+          <button class="small-btn" data-chapter="${escapeHtml(ch)}">複習此章節</button>
+        </div>
+      </div>
+    `).join("");
+
+  app.innerHTML = `
+    ${masthead()}
+    <div class="panel">
+      <div class="panel-title-row">
+        <h2>錯題複習區</h2>
+        <span class="back-link" id="btn-back">← 返回首頁</span>
+      </div>
+
+      ${wrongQs.length === 0 ? `
+        <div class="empty-note">目前沒有錯題，太棒了！去「開始練習」或「模擬考」累積經驗值吧。</div>
+      ` : `
+        <p style="font-size:14px;color:var(--ink-soft)">目前共有 <strong style="color:var(--rust)">${wrongQs.length}</strong> 題錯題待複習。答對後將自動從錯題本移除。</p>
+        <div class="btn-row" style="margin-bottom:20px;">
+          <button class="btn" id="btn-review-all">開始複習全部錯題（${wrongQs.length} 題）</button>
+          <button class="btn ghost" id="btn-clear-wrong">清空錯題本</button>
+        </div>
+        ${rows}
+      `}
+    </div>
+  `;
+
+  document.getElementById("btn-back").onclick = () => go("home");
+  const allBtn = document.getElementById("btn-review-all");
+  if(allBtn) allBtn.onclick = () => startQuiz(shuffle(wrongQs), "review", {returnView:"review-home"});
+  const clearBtn = document.getElementById("btn-clear-wrong");
+  if(clearBtn) clearBtn.onclick = () => {
+    if(confirm("確定要清空整個錯題本嗎？")){ wrongSet = new Set(); saveProgress(); render(); }
+  };
+  document.querySelectorAll("[data-chapter]").forEach(btn=>{
+    btn.onclick = () => {
+      const ch = btn.dataset.chapter;
+      const list = wrongQs.filter(q=>q.chapter===ch);
+      startQuiz(shuffle(list), "review", {returnView:"review-home"});
+    };
+  });
+}
+
+/* ---------- init ---------- */
+render();
+</script>
+</body>
+</html>
