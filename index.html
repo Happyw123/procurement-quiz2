@@ -226,6 +226,18 @@
   }
   .tag.chapter{color:var(--brand); border-color:var(--brand);}
   .tag.qtype{color:var(--gold); border-color:var(--gold);}
+  .tag.origno{color:var(--ink-soft); border-color:var(--line-strong); font-variant-numeric:tabular-nums;}
+
+  .explanation-box{
+    margin-top:2px; margin-bottom:16px; padding:12px 16px;
+    background:#F4F1E6; border:1px solid var(--gold); border-left:4px solid var(--gold);
+    font-size:13.5px; color:var(--ink); line-height:1.7;
+  }
+  .explanation-box .explanation-label{
+    font-family:"Noto Serif TC",serif; font-weight:700; color:var(--gold);
+    font-size:12px; margin-bottom:4px; letter-spacing:.05em;
+  }
+  .explanation-box.empty{ color:var(--ink-soft); font-style:italic; border-color:var(--line-strong); border-left-color:var(--line-strong); background:#FAF8F2; }
 
   .stem{
     font-size:18px; line-height:1.75; margin-bottom:22px; color:var(--ink);
@@ -759,11 +771,17 @@ function renderQuiz(){
   }
 
   let feedbackHtml = "";
+  let explanationHtml = "";
   if(!isMock && answered){
     const ok = answered.chosen === q.answer;
     feedbackHtml = `<div class="feedback-banner ${ok?"":"wrong"}">
       ${ok ? "✓ 答對了！" : `✗ 答錯了，正確答案是「${escapeHtml(q.type==="選擇題" ? (q.answer+" "+(q.options[q.answer]||"")) : (q.answer==="O"?"○ 正確":"✕ 錯誤"))}」`}
     </div>`;
+    if(!ok){
+      explanationHtml = q.explanation
+        ? `<div class="explanation-box"><div class="explanation-label">題目解析（AI 參考，請以正式法規為準）</div><div>${escapeHtml(q.explanation)}</div></div>`
+        : `<div class="explanation-box empty">此題的解析尚未建置，之後會依章節陸續補上。</div>`;
+    }
   }
 
   const nextLabel = qs.idx === total-1 ? (isMock ? "前往結果" : "查看結果") : "下一題";
@@ -798,12 +816,14 @@ function renderQuiz(){
       <div class="tag-row">
         <span class="tag chapter">${escapeHtml(q.chapter)}</span>
         <span class="tag qtype">${escapeHtml(q.type)}</span>
+        <span class="tag origno">原始題庫第 ${q.origNo} 題</span>
       </div>
 
       <div class="stem"><span class="qno">Q${qs.idx+1}.</span> ${escapeHtml(q.stem)}</div>
 
       ${bodyHtml}
       ${feedbackHtml}
+      ${explanationHtml}
 
       <div class="btn-row">
         ${isMock && qs.idx>0 ? `<button class="btn secondary" id="btn-prev">上一題</button>` : ""}
@@ -918,10 +938,14 @@ function renderResult(){
           const lbl = k => k==="O" ? "○ 正確" : "✕ 錯誤";
           answerLine = `你的答案：<span class="bad">${lbl(a.chosen)}</span>　正確答案：<span class="ok">${lbl(q.answer)}</span>`;
         }
+        const explanationBlock = q.explanation
+          ? `<div class="explanation-box"><div class="explanation-label">題目解析（AI 參考，請以正式法規為準）</div><div>${escapeHtml(q.explanation)}</div></div>`
+          : `<div class="explanation-box empty">此題的解析尚未建置，之後會依章節陸續補上。</div>`;
         return `<div class="review-item">
-          <div class="rq-meta">${escapeHtml(q.chapter)} · ${escapeHtml(q.type)}</div>
+          <div class="rq-meta">${escapeHtml(q.chapter)} · ${escapeHtml(q.type)} · 原始題庫第 ${q.origNo} 題</div>
           <div class="rq-stem">${escapeHtml(q.stem)}</div>
           <div class="rq-answer">${answerLine}</div>
+          ${explanationBlock}
         </div>`;
       }).join("");
 
