@@ -109,11 +109,12 @@
   /* ---------- Action cards ---------- */
   .action-grid{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:repeat(4,1fr);
     gap:16px;
     margin-bottom:32px;
   }
-  @media (max-width:760px){ .action-grid{grid-template-columns:1fr;} }
+  @media (max-width:960px){ .action-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:560px){ .action-grid{grid-template-columns:1fr;} }
   .action-card{
     background:var(--panel);
     border:1px solid var(--line-strong);
@@ -367,31 +368,52 @@ const QMAP = {};
 QUESTIONS.forEach(q => QMAP[q.id] = q);
 
 /* ---------- Persistence ---------- */
-const STORAGE_KEY = "procurementExamProgress_v1";
+const STORAGE_KEY = "procurementExamProgress_v2";
+const OLD_STORAGE_KEY = "procurementExamProgress_v1"; // for migrating existing users
 function loadProgress(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
-    if(!raw) return { practiced: [], wrong: [] };
-    const parsed = JSON.parse(raw);
-    return {
-      practiced: Array.isArray(parsed.practiced) ? parsed.practiced : [],
-      wrong: Array.isArray(parsed.wrong) ? parsed.wrong : []
-    };
-  }catch(e){ return { practiced: [], wrong: [] }; }
+    if(raw){
+      const parsed = JSON.parse(raw);
+      return {
+        practiced: Array.isArray(parsed.practiced) ? parsed.practiced : [],
+        wrong: Array.isArray(parsed.wrong) ? parsed.wrong : [],
+        wrongCounts: (parsed.wrongCounts && typeof parsed.wrongCounts === "object") ? parsed.wrongCounts : {}
+      };
+    }
+    // Migrate from the older schema (no wrongCounts) if present.
+    const oldRaw = localStorage.getItem(OLD_STORAGE_KEY);
+    if(oldRaw){
+      const old = JSON.parse(oldRaw);
+      return {
+        practiced: Array.isArray(old.practiced) ? old.practiced : [],
+        wrong: Array.isArray(old.wrong) ? old.wrong : [],
+        wrongCounts: {}
+      };
+    }
+    return { practiced: [], wrong: [], wrongCounts: {} };
+  }catch(e){ return { practiced: [], wrong: [], wrongCounts: {} }; }
 }
 let progress = loadProgress();
 let practicedSet = new Set(progress.practiced);
 let wrongSet = new Set(progress.wrong);
+let wrongCounts = progress.wrongCounts || {};
 
 function saveProgress(){
   localStorage.setItem(STORAGE_KEY, JSON.stringify({
     practiced: Array.from(practicedSet),
-    wrong: Array.from(wrongSet)
+    wrong: Array.from(wrongSet),
+    wrongCounts: wrongCounts
   }));
 }
 function markPracticed(id){ practicedSet.add(id); }
-function markWrong(id){ wrongSet.add(id); }
+function markWrong(id){
+  wrongSet.add(id);
+  wrongCounts[id] = (wrongCounts[id] || 0) + 1;
+}
 function markCorrectedIfNeeded(id){ wrongSet.delete(id); }
+function isFrequentlyWrong(q){ return (wrongCounts[q.id] || 0) > 2; }
+function frequentlyWrongQuestions(){ return QUESTIONS.filter(isFrequentlyWrong); }
 
 /* ---------- Utility ---------- */
 function shuffle(arr){
@@ -450,6 +472,7 @@ function render(){
   if(state.view === "quiz") return renderQuiz();
   if(state.view === "result") return renderResult();
   if(state.view === "review-home") return renderReviewHome();
+  if(state.view === "frequent-wrong-home") return renderFrequentWrongHome();
   app.innerHTML = "<p>找不到頁面</p>";
 }
 
@@ -476,6 +499,7 @@ function renderHome(){
   const typeCounts = chapterTypeCounts();
   const practicedTotal = practicedSet.size;
   const wrongTotal = wrongSet.size;
+  const freqWrongTotal = frequentlyWrongQuestions().length;
   const pct = TOTAL_QUESTIONS ? Math.round(practicedTotal/TOTAL_QUESTIONS*100) : 0;
 
   const rows = CHAPTER_ORDER.map(ch=>{
@@ -541,6 +565,12 @@ function renderHome(){
         ${wrongTotal>0 ? `<span class="badge">${wrongTotal} 題待複習</span>` : ""}
         <p>集中複習曾經答錯的題目，可設定本次複習題數，答對後即從錯題本移除。</p>
       </div>
+      <div class="action-card" id="card-frequent-wrong">
+        <div class="idx">04 · 弱點加強</div>
+        <h3>常錯題</h3>
+        ${freqWrongTotal>0 ? `<span class="badge">${freqWrongTotal} 題</span>` : ""}
+        <p>累計答錯超過 2 次的題目，可自選 5 / 10 題或自訂題數集中加強。</p>
+      </div>
     </div>
 
     <div class="panel">
@@ -562,9 +592,10 @@ function renderHome(){
   document.getElementById("card-practice").onclick = () => go("practice-setup");
   document.getElementById("card-mock").onclick = () => go("mock-setup");
   document.getElementById("card-review").onclick = () => go("review-home");
+  document.getElementById("card-frequent-wrong").onclick = () => go("frequent-wrong-home");
   document.getElementById("btn-reset").onclick = () => {
     if(confirm("確定要清除所有練習紀錄與錯題本嗎？此動作無法復原。")){
-      practicedSet = new Set(); wrongSet = new Set(); saveProgress(); render();
+      practicedSet = new Set(); wrongSet = new Set(); wrongCounts = {}; saveProgress(); render();
     }
   };
 }
@@ -722,7 +753,11 @@ function renderSetup(mode){
     if(pool.length === 0) return;
     const n = Math.min(countValue || 0, pool.length);
     if(n <= 0) return;
-    const selected = shuffle(pool).slice(0, n);
+    const unpracticed = shuffle(pool.filter(q => !practicedSet.has(q.id)));
+    const practiced = shuffle(pool.filter(q => practicedSet.has(q.id)));
+    // Prioritize questions never practiced before; only once those in this
+    // range run out do we start repeating already-practiced ones.
+    const selected = unpracticed.concat(practiced).slice(0, n);
     startQuiz(selected, isMock ? "mock" : "practice");
   };
 }
@@ -1120,6 +1155,97 @@ function renderReviewHome(){
       startQuiz(shuffle(list).slice(0, n), "review", {returnView:"review-home"});
     };
   });
+}
+
+function renderFrequentWrongHome(){
+  const freqQs = frequentlyWrongQuestions()
+    .slice()
+    .sort((a,b) => (wrongCounts[b.id]||0) - (wrongCounts[a.id]||0));
+
+  let selCount = 5; // "all" | number
+  let customMode = false;
+
+  function effectiveCount(poolLen){
+    if(selCount === "all") return poolLen;
+    const n = parseInt(selCount) || 0;
+    return Math.max(0, Math.min(n, poolLen));
+  }
+  function pickSession(n){
+    // Prioritize the worst offenders (highest wrongCounts), then
+    // shuffle just the presentation order of that subset.
+    return shuffle(freqQs.slice(0, n));
+  }
+
+  const listRows = freqQs.map(q => `
+    <div class="chapter-wrong-row">
+      <div>
+        <span class="cw-name">${escapeHtml(q.chapter)} · ${escapeHtml(q.type)} · 原始題庫第 ${q.origNo} 題</span>
+      </div>
+      <div class="cw-count" style="margin-left:auto;">答錯 ${wrongCounts[q.id]||0} 次</div>
+    </div>
+  `).join("");
+
+  app.innerHTML = `
+    ${masthead()}
+    <div class="panel">
+      <div class="panel-title-row">
+        <h2>常錯題</h2>
+        <span class="back-link" id="btn-back">← 返回首頁</span>
+      </div>
+
+      ${freqQs.length === 0 ? `
+        <div class="empty-note">目前沒有累計答錯超過 2 次的題目，繼續保持！</div>
+      ` : `
+        <p style="font-size:14px;color:var(--ink-soft)">累計答錯超過 <strong style="color:var(--rust)">2</strong> 次的題目，目前共有 <strong style="color:var(--rust)">${freqQs.length}</strong> 題。此紀錄是歷史累計次數，不會因為單次答對而歸零。</p>
+
+        <span class="field-label">本次加強題數</span>
+        <div class="chip-row" id="freq-count-chips">
+          <div class="chip active" data-count="5">5 題</div>
+          <div class="chip" data-count="10">10 題</div>
+          <div class="chip" data-count="all">全部</div>
+          <div class="chip" data-count="custom">自訂</div>
+          <input type="number" id="freq-custom-count" class="num-input" min="1" style="display:none" placeholder="題數">
+        </div>
+
+        <div class="btn-row" style="margin-bottom:20px;">
+          <button class="btn" id="btn-freq-start">開始加強練習（依上方設定）</button>
+        </div>
+        ${listRows}
+      `}
+    </div>
+  `;
+
+  document.getElementById("btn-back").onclick = () => go("home");
+
+  const countChipsWrap = document.getElementById("freq-count-chips");
+  if(countChipsWrap){
+    const customInput = document.getElementById("freq-custom-count");
+    document.querySelectorAll("#freq-count-chips .chip").forEach(chip=>{
+      chip.onclick = () => {
+        document.querySelectorAll("#freq-count-chips .chip").forEach(c=>c.classList.remove("active"));
+        chip.classList.add("active");
+        const v = chip.dataset.count;
+        if(v === "custom"){
+          customMode = true;
+          customInput.style.display = "inline-block";
+          customInput.focus();
+          selCount = parseInt(customInput.value) || 0;
+        } else {
+          customMode = false;
+          customInput.style.display = "none";
+          selCount = v === "all" ? "all" : parseInt(v);
+        }
+      };
+    });
+    customInput.oninput = () => { selCount = parseInt(customInput.value) || 0; };
+  }
+
+  const startBtn = document.getElementById("btn-freq-start");
+  if(startBtn) startBtn.onclick = () => {
+    const n = effectiveCount(freqQs.length);
+    if(n <= 0) return;
+    startQuiz(pickSession(n), "review", {returnView:"frequent-wrong-home"});
+  };
 }
 
 /* ---------- init ---------- */
