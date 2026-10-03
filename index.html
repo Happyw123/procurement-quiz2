@@ -101,6 +101,13 @@
     height:5px; background:var(--line); margin-top:8px; overflow:hidden;
   }
   .progress-bar-fill{ height:100%; background:var(--teal); }
+  .stat-type-breakdown{ margin-top:10px; display:flex; flex-direction:column; gap:6px; }
+  .stat-type-row{ display:flex; align-items:center; gap:6px; font-size:11px; color:var(--ink-soft); }
+  .stat-type-label{ flex:none; width:38px; }
+  .stat-type-nums{ flex:none; width:48px; font-variant-numeric:tabular-nums; }
+  .stat-type-track{ flex:1; height:4px; background:var(--line); overflow:hidden; }
+  .stat-type-fill{ height:100%; background:var(--gold); }
+  .stat-type-pct{ flex:none; width:32px; text-align:right; font-variant-numeric:tabular-nums; }
   @media (max-width:680px){
     .stat-strip{grid-template-columns:repeat(2,1fr);}
     .stat-strip .stat:nth-child(2){border-right:none;}
@@ -452,6 +459,15 @@ function practicedCountForChapterType(ch, type){
   QUESTIONS.forEach(q => { if(q.chapter===ch && q.type===type && practicedSet.has(q.id)) n++; });
   return n;
 }
+function overallTypeCounts(){
+  // { "選擇題": {total, done}, "是非題": {total, done} } across the whole bank
+  const out = { "選擇題": {total:0, done:0}, "是非題": {total:0, done:0} };
+  QUESTIONS.forEach(q => {
+    out[q.type].total++;
+    if(practicedSet.has(q.id)) out[q.type].done++;
+  });
+  return out;
+}
 
 /* ============================================================
    Router / render
@@ -501,6 +517,7 @@ function renderHome(){
   const wrongTotal = wrongSet.size;
   const freqWrongTotal = frequentlyWrongQuestions().length;
   const pct = TOTAL_QUESTIONS ? Math.round(practicedTotal/TOTAL_QUESTIONS*100) : 0;
+  const overallByType = overallTypeCounts();
 
   const rows = CHAPTER_ORDER.map(ch=>{
     const types = ["選擇題","是非題"];
@@ -529,6 +546,18 @@ function renderHome(){
         <div class="stat-label">總題數</div>
         <div class="stat-value">${TOTAL_QUESTIONS}</div>
         <div class="stat-sub">題庫全部題目</div>
+        <div class="stat-type-breakdown">
+          ${["選擇題","是非題"].map(ty=>{
+            const t = overallByType[ty];
+            const p = t.total ? Math.round(t.done/t.total*100) : 0;
+            return `<div class="stat-type-row">
+              <span class="stat-type-label">${ty}</span>
+              <span class="stat-type-nums">${t.done}/${t.total}</span>
+              <div class="stat-type-track"><div class="stat-type-fill" style="width:${p}%"></div></div>
+              <span class="stat-type-pct">${p}%</span>
+            </div>`;
+          }).join("")}
+        </div>
       </div>
       <div class="stat">
         <div class="stat-label">已練習題數</div>
